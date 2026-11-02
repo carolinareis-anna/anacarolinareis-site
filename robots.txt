@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://anacarolinareis.adv.br/sitemap.xml
