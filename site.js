@@ -23,7 +23,7 @@
     });
   }
 
-  // "Qual é a sua situação?" — abas + respostas em tese
+  // "Qual destas situações se parece com a sua?" — abas + respostas em tese
   var panel = document.querySelector('[data-situacoes]');
   if (panel) {
     var tabs = panel.querySelectorAll('[role=tab]');
@@ -50,6 +50,40 @@
         pane.querySelectorAll('.chip').forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
         pane.querySelectorAll('.answer').forEach(function (a) { a.hidden = true; });
         if (on) { c.setAttribute('aria-pressed', 'true'); document.getElementById(c.dataset.a).hidden = false; }
+      });
+    });
+  }
+
+  // formulário de contato: monta a mensagem e abre o WhatsApp ou o app de e-mail da pessoa
+  var form = document.querySelector('[data-contato]');
+  if (form) {
+    var err = form.querySelector('.err');
+    var val = function (n) { var el = form.elements[n]; return el ? el.value.trim() : ''; };
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+    form.querySelectorAll('[data-send]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (!val('nome') || !val('telefone') || !val('mensagem') || !form.elements.lgpd.checked) {
+          err.classList.add('on');
+          form.reportValidity && form.reportValidity();
+          return;
+        }
+        err.classList.remove('on');
+        var area = val('area') || 'Atendimento';
+        var linhas = [
+          'Olá, Dra. Ana Carolina. Meu nome é ' + val('nome') + '.',
+          'Assunto: ' + area,
+          '',
+          val('mensagem'),
+          '',
+          'Telefone/WhatsApp: ' + val('telefone') + (val('email') ? ' | E-mail: ' + val('email') : '')
+        ];
+        var texto = linhas.join('\n');
+        if (b.dataset.send === 'wa') {
+          window.open('https://wa.me/5511975875004?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+        } else {
+          window.location.href = 'mailto:carolinareis.ana@adv.oabsp.org.br?subject=' +
+            encodeURIComponent('Contato pelo site — ' + area) + '&body=' + encodeURIComponent(texto);
+        }
       });
     });
   }
