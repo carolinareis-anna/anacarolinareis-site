@@ -57,28 +57,61 @@
     pick(0);
   }
 
-  // carrossel das áreas: avança sozinho, pausa com o mouse em cima
+  // carrossel das áreas: dois cards visíveis, anda um por vez e volta ao início sem salto
   var car = document.querySelector('[data-car]');
   if (car) {
-    var track = car.querySelector('.car-track'), slides = [].slice.call(car.querySelectorAll('.cs')), dots = [].slice.call(car.querySelectorAll('.cs-dot'));
-    var ci = 0;
-    var go = function (i) {
-      ci = (i + slides.length) % slides.length;
-      track.style.transform = 'translateX(' + (-100 * ci) + '%)';
-      slides.forEach(function (s, k) { s.setAttribute('aria-hidden', k === ci ? 'false' : 'true'); s.querySelectorAll('a').forEach(function (a) { a.tabIndex = k === ci ? 0 : -1; }); });
-      dots.forEach(function (d, k) { d.setAttribute('aria-current', k === ci ? 'true' : 'false'); var i2 = d.querySelector('i'); i2.style.animation = 'none'; void i2.offsetWidth; i2.style.animation = ''; });
+    var track = car.querySelector('.car-track');
+    var orig = [].slice.call(track.children), n = orig.length;
+    orig.forEach(function (c) { var k = c.cloneNode(true); k.setAttribute('aria-hidden', 'true'); k.querySelectorAll('a').forEach(function (a) { a.tabIndex = -1; }); track.appendChild(k); });
+    var dots = [].slice.call(car.querySelectorAll('.cs-dot'));
+    var pos = 0;
+    var step = function () { var c = track.children[0]; return c.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 24); };
+    var paint = function (anim) {
+      track.classList.toggle('no-anim', !anim);
+      track.style.transform = 'translateX(' + (-pos * step()) + 'px)';
+      var cur = pos % n;
+      dots.forEach(function (d, k) { d.setAttribute('aria-current', k === cur ? 'true' : 'false'); var i2 = d.querySelector('i'); i2.style.animation = 'none'; void i2.offsetWidth; i2.style.animation = ''; });
+    };
+    var go = function (p) {
+      if (p < 0) { pos = n; paint(false); void track.offsetWidth; p = n - 1; }
+      pos = p; paint(true);
+      if (pos >= n) setTimeout(function () { pos = pos % n; paint(false); }, 720);
     };
     if (!calm) {
       car.classList.add('auto');
-      dots.forEach(function (d) { d.querySelector('i').addEventListener('animationend', function () { if (car.classList.contains('auto')) go(ci + 1); }); });
+      dots.forEach(function (d) { d.querySelector('i').addEventListener('animationend', function () { if (car.classList.contains('auto')) go(pos + 1); }); });
     }
     dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
-    car.querySelector('[data-prev]').addEventListener('click', function () { go(ci - 1); });
-    car.querySelector('[data-next]').addEventListener('click', function () { go(ci + 1); });
+    car.querySelector('[data-prev]').addEventListener('click', function () { go(pos - 1); });
+    car.querySelector('[data-next]').addEventListener('click', function () { go(pos + 1); });
     var sx = null;
     car.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
-    car.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(ci + (dx < 0 ? 1 : -1)); sx = null; });
-    go(0);
+    car.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(pos + (dx < 0 ? 1 : -1)); sx = null; });
+    window.addEventListener('resize', function () { paint(false); });
+    paint(false);
+  }
+
+  // botões "entrar em contato": levam ao formulário com o assunto já escolhido
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-assunto]');
+    if (!a) return;
+    var sel = document.getElementById('f-area');
+    if (sel) [].slice.call(sel.options).forEach(function (o) { if (o.text === a.dataset.assunto) sel.value = o.value; });
+  });
+
+  // cidade de quem visita (aproximada pelo IP), só para cidades do estado de São Paulo
+  var cid = document.querySelector('[data-cidade]');
+  if (cid && window.fetch) {
+    var put = function (c) { if (c) cid.textContent = c; };
+    var saved = null;
+    try { saved = sessionStorage.getItem('acr-cidade'); } catch (e) {}
+    if (saved !== null) put(saved);
+    else fetch('https://get.geojs.io/v1/ip/geo.json').then(function (r) { return r.json(); }).then(function (g) {
+      var reg = (g.region || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      var c = (g.country_code === 'BR' && reg === 'sao paulo' && g.city) ? g.city : '';
+      try { sessionStorage.setItem('acr-cidade', c); } catch (e) {}
+      put(c);
+    }).catch(function () {});
   }
 
   // frase digitada no banner
