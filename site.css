@@ -792,3 +792,6 @@ html{scroll-padding-top:84px}
 /* forma: meio círculo encostado na borda direita */
 .hx-geo{width:560px;right:-280px;top:50%;transform:translateY(-50%)}
 @media (max-width:1100px){.hx-geo{display:none}}
+/* meio círculo maior: ocupa boa parte do espaço livre à direita */
+.hx-geo{--g:clamp(600px,56vw,880px);width:var(--g);right:calc(var(--g) / -2)}
+@media (max-width:1180px){.hx-geo{display:none}}
