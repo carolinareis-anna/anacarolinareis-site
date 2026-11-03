@@ -117,20 +117,33 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   fit();
 
-  // cidade de quem visita (aproximada pelo IP), só para cidades do estado de São Paulo
+  // cidade de quem visita: só troca "Arujá" quando dois serviços de localização concordam
+  // e a cidade fica fora da região (até 35 km de Arujá mostra sempre Arujá)
   var cid = document.querySelector('[data-cidade]');
-  if (cid && window.fetch) {
+  if (cid && window.fetch && window.Promise) {
     var put = function (c) { if (c) { cid.textContent = c; fit(); } };
+    var norm = function (x) { return (x || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
+    var km = function (la, lo) {
+      var r = Math.PI / 180, a1 = -23.3965 * r, b1 = -46.3208 * r, a2 = la * r, b2 = lo * r;
+      return 6371 * Math.acos(Math.min(1, Math.sin(a1) * Math.sin(a2) + Math.cos(a1) * Math.cos(a2) * Math.cos(b2 - b1)));
+    };
     var saved = null;
-    try { saved = sessionStorage.getItem('acr-cidade'); } catch (e) {}
+    try { saved = sessionStorage.getItem('acr-cidade2'); } catch (e) {}
     if (saved !== null) put(saved);
-    else fetch('https://get.geojs.io/v1/ip/geo.json').then(function (r) { return r.json(); }).then(function (g) {
-      var reg = (g.region || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-      var c = (g.country_code === 'BR' && reg === 'sao paulo' && g.city) ? g.city : '';
-      try { sessionStorage.setItem('acr-cidade', c); } catch (e) {}
-      put(c);
-    }).catch(function () {});
+    else {
+      var get = function (u, map) { return fetch(u).then(function (r) { return r.json(); }).then(map).catch(function () { return null; }); };
+      Promise.all([
+        get('https://get.geojs.io/v1/ip/geo.json', function (g) { return { city: g.city, uf: g.region, cc: g.country_code, lat: +g.latitude, lon: +g.longitude }; }),
+        get('https://freeipapi.com/api/json', function (g) { return { city: g.cityName, uf: g.regionName, cc: g.countryCode, lat: +g.latitude, lon: +g.longitude }; })
+      ]).then(function (res) {
+        var a = res[0], b = res[1], c = '';
+        if (a && b && a.cc === 'BR' && norm(a.uf) === 'sao paulo' && norm(a.city) && norm(a.city) === norm(b.city) && km(a.lat, a.lon) > 35) c = a.city;
+        try { sessionStorage.setItem('acr-cidade2', c); } catch (e) {}
+        put(c);
+      });
+    }
   }
+
 
   // frase digitada no banner
   var tw = document.querySelector('.tw');
