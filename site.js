@@ -55,6 +55,7 @@
     });
     window.addEventListener('resize', place);
     pick(0);
+    var c0 = gx.querySelector('.gx-chip[aria-pressed=true]'); if (c0) c0.click();
   }
 
   // carrossel das áreas: dois cards visíveis, anda um por vez e volta ao início sem salto
@@ -96,7 +97,7 @@
     var a = e.target.closest && e.target.closest('[data-assunto]');
     if (!a) return;
     var sel = document.getElementById('f-area');
-    if (sel) [].slice.call(sel.options).forEach(function (o) { if (o.text === a.dataset.assunto) sel.value = o.value; });
+    if (sel) sel.value = a.dataset.assunto;
   });
 
 
