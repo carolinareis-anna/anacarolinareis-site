@@ -25,56 +25,6 @@
 
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // "Qual destas situações se parece com a sua?" — abas que avançam sozinhas até a pessoa interagir
-  var panel = document.querySelector('[data-situacoes]');
-  if (panel) {
-    var tabs = [].slice.call(panel.querySelectorAll('[role=tab]'));
-    var closeAll = function () {
-      panel.querySelectorAll('.pane').forEach(function (p) { p.classList.remove('open'); });
-      panel.querySelectorAll('.answer').forEach(function (a) { a.hidden = true; });
-    };
-    var show = function (tab) {
-      closeAll();
-      tabs.forEach(function (t) {
-        var on = t === tab;
-        t.setAttribute('aria-selected', on);
-        t.tabIndex = on ? 0 : -1;
-        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-      });
-    };
-    var stop = function () { panel.classList.remove('auto'); };
-    if (!calm) {
-      panel.classList.add('auto');
-      tabs.forEach(function (t, i) {
-        t.querySelector('.bar').addEventListener('animationend', function () {
-          if (panel.classList.contains('auto')) show(tabs[(i + 1) % tabs.length]);
-        });
-      });
-    }
-    tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { stop(); show(t); });
-      t.addEventListener('keydown', function (e) {
-        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (!d) return;
-        stop(); var n = tabs[(i + d + tabs.length) % tabs.length]; show(n); n.focus();
-      });
-    });
-    panel.querySelectorAll('.sit').forEach(function (c) {
-      c.addEventListener('click', function () {
-        stop();
-        var pane = c.closest('.pane'), ans = document.getElementById(c.dataset.a);
-        pane.classList.add('open'); ans.hidden = false; ans.focus({ preventScroll: true });
-      });
-    });
-    panel.querySelectorAll('.back').forEach(function (bk) {
-      bk.addEventListener('click', function () {
-        var pane = bk.closest('.pane'), id = bk.closest('.answer').id;
-        closeAll();
-        var s = pane.querySelector('[data-a="' + id + '"]'); if (s) s.focus();
-      });
-    });
-  }
-
   // frase digitada no banner
   var tw = document.querySelector('.tw');
   if (tw && !calm) {
@@ -93,13 +43,10 @@
     setTimeout(tick, 2600);
   }
 
-  // barra de leitura e item do menu da seção visível
-  var bar = document.querySelector('.progress');
+  // item do menu da seção visível
   var links = [].slice.call(document.querySelectorAll('.nav a[href*="#"]'));
   var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').split('#')[1]); });
   var onScroll = function () {
-    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
-    if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? h.scrollTop / max : 0) + ')';
     var cur = -1;
     secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < 140) cur = i; });
     links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
