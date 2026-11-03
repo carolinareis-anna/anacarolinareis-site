@@ -759,3 +759,29 @@ html{scroll-padding-top:84px}
 
 /* assunto livre no formulário */
 .form input#f-area{width:100%}
+
+/* ─── v11 ─── */
+.hx-l{max-width:640px}
+/* forma: anéis concêntricos com órbitas lentas */
+.hx-geo{top:50%;right:calc(max(24px,(100vw - 1200px)/2) - 150px);width:min(620px,46vw);transform:translateY(-50%);fill:none;overflow:visible}
+.hx-geo .rings circle{stroke:var(--brand);stroke-width:1;opacity:.12}
+.hx-geo .rings circle:nth-child(2){opacity:.16}
+.hx-geo .rings circle:nth-child(3){opacity:.2}
+.hx-geo .rings circle:nth-child(4){fill:var(--brand);fill-opacity:.035;opacity:.22}
+.hx-geo .dash{stroke:var(--accent);stroke-width:1.2;stroke-dasharray:2 10;stroke-linecap:round;opacity:.55;transform-origin:300px 300px;animation:spin 140s linear infinite}
+.hx-geo .d2{animation-duration:90s;animation-direction:reverse;opacity:.45}
+.hx-geo .orb{transform-origin:300px 300px;animation:spin 60s linear infinite}
+.hx-geo .o2{animation-duration:38s;animation-direction:reverse}
+.hx-geo .orb circle{fill:var(--accent);opacity:.75}
+.hx-geo .o2 circle{fill:var(--brand);opacity:.5}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hx{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.hx-geo .dash,.hx-geo .orb{animation:none}}
+@media (max-width:1100px){.hx-geo{display:none}}
+
+/* acompanhamento: título e texto alinhados com os tópicos */
+.app-card{align-items:stretch;row-gap:14px}
+.app-t h3{font:600 clamp(24px,2.4vw,30px)/1.2 var(--serif);margin:0 0 14px}
+.app-hd .eyebrow{margin-bottom:0}
+.app-l{display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding-top:4px}
+.hx-geo{right:calc(max(24px,(100vw - 1200px)/2) - 240px);width:min(640px,46vw)}
