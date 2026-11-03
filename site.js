@@ -5,10 +5,9 @@
   // tema claro/escuro (lembra a escolha neste navegador)
   var tbtn = document.querySelector('[data-theme-toggle]');
   if (tbtn) tbtn.addEventListener('click', function () {
-    var dark = root.dataset.theme ? root.dataset.theme === 'dark'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = root.dataset.theme === 'dark';
     root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('acr-theme', root.dataset.theme); } catch (e) {}
+    try { localStorage.setItem('acr-tema', root.dataset.theme); } catch (e) {}
   });
 
   // menu no celular
@@ -24,6 +23,52 @@
   }
 
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+  // áreas de atuação: lista + painel
+  var ar = document.querySelector('[data-areas]');
+  if (ar) {
+    var items = [].slice.call(ar.querySelectorAll('.ar-item'));
+    items.forEach(function (it) {
+      it.querySelector('.ar-tab').addEventListener('click', function () {
+        var mobile = window.matchMedia('(max-width: 900px)').matches;
+        var was = it.hasAttribute('data-on');
+        items.forEach(function (o) { o.removeAttribute('data-on'); o.querySelector('.ar-tab').setAttribute('aria-expanded', 'false'); });
+        if (!(mobile && was)) { it.setAttribute('data-on', ''); this.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+  }
+
+  // guia rápido: o detalhe abre logo abaixo da linha do card escolhido
+  var gq = document.querySelector('[data-guia]');
+  if (gq) {
+    var cards = [].slice.call(gq.querySelectorAll('.gq-card'));
+    var panel = gq.querySelector('.gq-panel'), body = panel.querySelector('.gq-body');
+    var cur = null;
+    var close = function () {
+      panel.hidden = true; cur = null;
+      cards.forEach(function (c) { c.setAttribute('aria-expanded', 'false'); });
+    };
+    var open = function (c, focus) {
+      var top = c.offsetTop, last = c;
+      cards.forEach(function (o) { if (o.offsetTop === top) last = o; });
+      last.after(panel);
+      body.innerHTML = document.getElementById('gq-t' + c.dataset.g).innerHTML;
+      cards.forEach(function (o) { o.setAttribute('aria-expanded', o === c ? 'true' : 'false'); });
+      panel.hidden = false; cur = c;
+      if (focus) {
+        var r = panel.getBoundingClientRect();
+        if (r.bottom > window.innerHeight || r.top < 80) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+    cards.forEach(function (c) {
+      c.addEventListener('click', function () { if (cur === c) close(); else open(c, true); });
+    });
+    panel.querySelector('.gq-x').addEventListener('click', function () { var c = cur; close(); if (c) c.focus(); });
+    var rz;
+    window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (cur) open(cur, false); }, 150); });
+    open(cards[0], false);
+  }
 
   // frase digitada no banner
   var tw = document.querySelector('.tw');
