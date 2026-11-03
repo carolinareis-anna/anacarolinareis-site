@@ -23,11 +23,18 @@
     });
   }
 
-  // "Qual destas situações se parece com a sua?" — abas + respostas em tese
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // "Qual destas situações se parece com a sua?" — abas que avançam sozinhas até a pessoa interagir
   var panel = document.querySelector('[data-situacoes]');
   if (panel) {
-    var tabs = panel.querySelectorAll('[role=tab]');
+    var tabs = [].slice.call(panel.querySelectorAll('[role=tab]'));
+    var closeAll = function () {
+      panel.querySelectorAll('.pane').forEach(function (p) { p.classList.remove('open'); });
+      panel.querySelectorAll('.answer').forEach(function (a) { a.hidden = true; });
+    };
     var show = function (tab) {
+      closeAll();
       tabs.forEach(function (t) {
         var on = t === tab;
         t.setAttribute('aria-selected', on);
@@ -35,24 +42,69 @@
         document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
       });
     };
+    var stop = function () { panel.classList.remove('auto'); };
+    if (!calm) {
+      panel.classList.add('auto');
+      tabs.forEach(function (t, i) {
+        t.querySelector('.bar').addEventListener('animationend', function () {
+          if (panel.classList.contains('auto')) show(tabs[(i + 1) % tabs.length]);
+        });
+      });
+    }
     tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { show(t); });
+      t.addEventListener('click', function () { stop(); show(t); });
       t.addEventListener('keydown', function (e) {
         var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (!d) return;
-        var n = tabs[(i + d + tabs.length) % tabs.length]; show(n); n.focus();
+        stop(); var n = tabs[(i + d + tabs.length) % tabs.length]; show(n); n.focus();
       });
     });
-    panel.querySelectorAll('.chip').forEach(function (c) {
+    panel.querySelectorAll('.sit').forEach(function (c) {
       c.addEventListener('click', function () {
-        var pane = c.closest('[role=tabpanel]');
-        var on = c.getAttribute('aria-pressed') !== 'true';
-        pane.querySelectorAll('.chip').forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
-        pane.querySelectorAll('.answer').forEach(function (a) { a.hidden = true; });
-        if (on) { c.setAttribute('aria-pressed', 'true'); document.getElementById(c.dataset.a).hidden = false; }
+        stop();
+        var pane = c.closest('.pane'), ans = document.getElementById(c.dataset.a);
+        pane.classList.add('open'); ans.hidden = false; ans.focus({ preventScroll: true });
+      });
+    });
+    panel.querySelectorAll('.back').forEach(function (bk) {
+      bk.addEventListener('click', function () {
+        var pane = bk.closest('.pane'), id = bk.closest('.answer').id;
+        closeAll();
+        var s = pane.querySelector('[data-a="' + id + '"]'); if (s) s.focus();
       });
     });
   }
+
+  // frase digitada no banner
+  var tw = document.querySelector('.tw');
+  if (tw && !calm) {
+    var fr = tw.dataset.frases.split('|'), fi = 0, ci = fr[0].length, del = true;
+    var tick = function () {
+      var f = fr[fi];
+      if (del) {
+        ci--; tw.textContent = f.slice(0, ci);
+        if (ci <= 0) { del = false; fi = (fi + 1) % fr.length; }
+        setTimeout(tick, 28);
+      } else {
+        var g = fr[fi]; ci++; tw.textContent = g.slice(0, ci);
+        if (ci >= g.length) { del = true; setTimeout(tick, 2200); } else setTimeout(tick, 55);
+      }
+    };
+    setTimeout(tick, 2600);
+  }
+
+  // barra de leitura e item do menu da seção visível
+  var bar = document.querySelector('.progress');
+  var links = [].slice.call(document.querySelectorAll('.nav a[href*="#"]'));
+  var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').split('#')[1]); });
+  var onScroll = function () {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? h.scrollTop / max : 0) + ')';
+    var cur = -1;
+    secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   // formulário de contato: monta a mensagem e abre o WhatsApp ou o app de e-mail da pessoa
   var form = document.querySelector('[data-contato]');
