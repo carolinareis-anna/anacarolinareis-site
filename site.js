@@ -7,7 +7,7 @@
   if (tbtn) tbtn.addEventListener('click', function () {
     var dark = root.dataset.theme === 'dark';
     root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('acr-tema', root.dataset.theme); } catch (e) {}
+    try { sessionStorage.setItem('acr-tema', root.dataset.theme); } catch (e) {}
   });
 
   // menu no celular
@@ -99,10 +99,27 @@
     if (sel) [].slice.call(sel.options).forEach(function (o) { if (o.text === a.dataset.assunto) sel.value = o.value; });
   });
 
+
+  // título do banner: segunda linha sempre inteira, reduzindo a fonte se a cidade for longa
+  var fitH = document.querySelector('[data-fit]');
+  var fit = function () {
+    if (!fitH) return;
+    var l2 = fitH.querySelector('.hx-l2'), box = fitH.parentNode;
+    fitH.style.fontSize = '';
+    var fs = parseFloat(getComputedStyle(fitH).fontSize);
+    var min = window.innerWidth < 600 ? 30 : 40;
+    while (l2.getBoundingClientRect().width > box.clientWidth && fs > min) { fs -= 1; fitH.style.fontSize = fs + 'px'; }
+    var cid2 = fitH.querySelector('[data-cidade]');
+    if (l2.getBoundingClientRect().width > box.clientWidth && cid2 && cid2.textContent !== 'Arujá') { cid2.textContent = 'Arujá'; fit(); }
+  };
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  fit();
+
   // cidade de quem visita (aproximada pelo IP), só para cidades do estado de São Paulo
   var cid = document.querySelector('[data-cidade]');
   if (cid && window.fetch) {
-    var put = function (c) { if (c) cid.textContent = c; };
+    var put = function (c) { if (c) { cid.textContent = c; fit(); } };
     var saved = null;
     try { saved = sessionStorage.getItem('acr-cidade'); } catch (e) {}
     if (saved !== null) put(saved);

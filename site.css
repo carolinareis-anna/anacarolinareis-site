@@ -702,3 +702,27 @@ html{scroll-padding-top:84px}
 .cs-topics li>span,.cs-topics li>a>span{display:inline;padding:0;justify-content:normal}
 .cs-topics li>a{justify-content:flex-start}
 .lg-card form[hidden]{display:none}
+
+/* ─── v9 ─── */
+.hx h1 .hx-l2{display:inline-block;white-space:nowrap}
+.hx-l{max-width:760px}
+
+/* cards das áreas */
+.cs{position:relative;overflow:hidden;padding:34px 34px 30px;border-top:3px solid var(--brand)}
+.cs-num{position:absolute;top:18px;right:26px;font:500 64px/1 var(--serif);color:var(--line);letter-spacing:-.02em;pointer-events:none}
+.cs-h{gap:16px}
+.cs-ic{width:52px;height:52px;border-radius:50%;background:var(--brand);color:#fff}
+:root[data-theme=dark] .cs-ic{color:#0b1530}
+.cs-ic svg{width:22px;height:22px}
+.cs-h h3{font:600 clamp(23px,2.1vw,27px)/1.2 var(--serif)}
+.cs>p{margin:16px 0 22px;max-width:480px}
+.cs-lbl{display:block;margin-bottom:12px;font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.cs-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.cs-tags li{display:block}
+.cs-tags a,.cs-tags span{display:inline-flex;align-items:center;padding:8px 13px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface-2);color:var(--ink);font:500 13.5px/1.2 var(--sans);text-decoration:none!important;transition:border-color .2s,background .2s}
+.cs-tags a:hover{border-color:var(--brand);background:var(--surface)}
+.cs-cta{display:none}
+@media (max-width:900px){.cs{padding:26px 22px}.cs-num{font-size:48px;top:16px;right:18px}}
+
+/* área do cliente: título em duas linhas */
+.lg-intro h1{font-size:clamp(32px,3.6vw,46px)}
