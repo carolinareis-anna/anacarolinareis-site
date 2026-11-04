@@ -795,3 +795,154 @@ html{scroll-padding-top:84px}
 /* meio círculo maior: ocupa boa parte do espaço livre à direita */
 .hx-geo{--g:clamp(600px,56vw,880px);width:var(--g);right:calc(var(--g) / -2)}
 @media (max-width:1180px){.hx-geo{display:none}}
+
+/* ═══ v14 · revisão mobile (não altera o desktop) ═══ */
+@media (max-width:900px){
+  .gx-b{grid-template-columns:1fr}
+  .gx-list{padding:6px}
+}
+@media (max-width:700px){
+  /* base */
+  .wrap{padding:0 20px}
+  .sec{padding:60px 0}
+  .sec-h{margin-bottom:30px}
+  .sec-h h2{font-size:29px;line-height:1.15;text-wrap:balance}
+  .sec-h p{font-size:15.5px;line-height:1.6}
+
+  /* cabeçalho */
+  .top .wrap{height:64px;gap:8px}
+  .brand-h img{height:40px}
+  .top-r{gap:4px}
+  .top .btn-sm{height:40px;width:40px;padding:0;margin-left:2px}
+  .icon-btn{width:40px;height:40px}
+  .nav{top:64px;padding:6px 20px 18px;box-shadow:0 18px 30px -18px rgba(11,22,48,.25)}
+  .nav a{padding:13px 0;font-size:16.5px;text-align:center}
+  .nav a:last-child{border-bottom:0}
+
+  /* banner: centralizado */
+  .hx{padding:40px 0 48px;text-align:center}
+  .hx-eye{justify-content:center;font-size:11px;letter-spacing:.16em}
+  .hx-eye::after{content:"";flex:none;width:22px;height:1px;background:currentColor}
+  .hx h1{font-size:clamp(34px,10vw,42px);line-height:1.08;margin:16px 0 14px}
+  .hx-type{font-size:17px;min-height:2.9em}
+  .hx-lead{font-size:15.5px;line-height:1.6;margin:10px auto 0;max-width:340px}
+  .hx .cta{flex-direction:column;align-items:stretch;gap:10px;margin-top:26px}
+  .hx .cta .btn{width:100%;height:52px}
+  .hx-facts{grid-template-columns:1fr 1fr;gap:0;margin:28px 0 0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+  .hx-facts div,.hx-facts div:nth-child(odd),.hx-facts div:nth-child(3){padding:14px 10px;border:0;text-align:center}
+  .hx-facts div:nth-child(odd){border-right:1px solid var(--line)}
+  .hx-facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .hx-facts dt{font-size:10px;letter-spacing:.14em}
+  .hx-facts dd{margin-top:6px;font-size:13.5px;line-height:1.35;white-space:normal}
+
+  /* sobre */
+  .about{gap:28px}
+  .portrait{width:100%;max-width:280px;aspect-ratio:1/1;margin:0 auto!important;border-radius:20px}
+  .portrait img{width:40%}
+  .portrait figcaption{bottom:22px;font-size:19px}
+  .about>div{text-align:center}
+  .about .eyebrow{justify-content:center}
+  .about h2{font-size:30px;margin-bottom:14px}
+  .about p{font-size:15.5px;line-height:1.65;text-align:left}
+  .facts{gap:12px;margin:22px 0;text-align:left;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+  .facts li{font-size:14.5px}
+  .about .row{justify-content:center}
+
+  /* áreas (carrossel) */
+  .car-vp{margin:-10px;padding:10px}
+  .cs{padding:24px 20px 22px}
+  .cs-h{gap:12px}
+  .cs-ic{width:44px;height:44px}
+  .cs-ic svg{width:20px;height:20px}
+  .cs-h h3{font-size:22px}
+  .cs>p{font-size:15px;margin:14px 0 18px}
+  .cs-tags{gap:7px}
+  .cs-tags a,.cs-tags span{padding:7px 12px;font-size:13px}
+  .car-nav{margin-top:20px}
+  .car-dots{gap:6px}
+
+  /* atendimento: linha do tempo compacta */
+  .steps{gap:0;position:relative;padding-left:4px}
+  .step{display:grid;grid-template-columns:36px 1fr;column-gap:16px;padding:0 0 22px;background:none;border:0;border-radius:0}
+  .step::before{content:"";position:absolute;left:17px;top:38px;bottom:4px;width:1px;background:var(--line-2)}
+  .step:last-child::before{display:none}
+  .step b{grid-row:1/span 2;margin:0;width:36px;height:36px;background:var(--brand);color:#fff;font-size:14px}
+  :root[data-theme=dark] .step b{color:#0b1530}
+  .step h3{font-size:16.5px;margin:6px 0 4px}
+  .step p{font-size:14.5px;line-height:1.55}
+  .app-card{margin-top:18px;padding:24px 20px;gap:18px;text-align:left}
+  .app-hd{text-align:center}.app-hd .eyebrow{justify-content:center}
+  .app-t h3{font-size:24px;text-align:center}
+  .app-t p{font-size:15px}
+  .app-l{gap:14px;padding:16px 0 0;border-top:1px solid var(--line)}
+
+  /* guia rápido */
+  .gx-f{gap:6px;margin-bottom:18px}
+  .gx-chip{height:38px;padding:0 15px;font-size:13.5px}
+  .gx-q{padding:12px 10px;gap:12px}
+  .gx-ic{width:38px;height:38px}
+  .gx-t b{font-size:15px}
+  .gx-panel{padding:20px 18px!important;margin:2px 0 8px!important}
+  .gx-panel h3{font-size:19px}
+  .gx-txt{font-size:15px}
+  .gx-steps li{font-size:14.5px}
+  .gx-cta{width:100%;justify-content:center}
+  .gx-fine{margin:14px auto 30px;max-width:320px}
+
+  /* redes */
+  .social{grid-template-columns:1fr 1fr;gap:12px}
+  .soc{flex-direction:column;justify-content:center;text-align:center;gap:10px;padding:20px 12px}
+  .soc .ico{width:46px;height:46px}
+  .soc .txt b{font-size:16px}
+  .soc .txt span{font-size:12.5px;word-break:break-all}
+
+  /* faq */
+  .faq summary{padding:16px 16px;font-size:15px}
+  .faq .a{padding:0 16px 16px;font-size:14.5px}
+
+  /* contato */
+  .contact{padding:32px 18px 18px;gap:28px;border-radius:20px}
+  .contact>div:first-child{text-align:center}
+  .contact .eyebrow{justify-content:center}
+  .contact h2{font-size:30px}
+  .contact>div>p{font-size:15px}
+  .clist{display:inline-grid;text-align:left;gap:10px}
+  .clist a{font-size:14.5px}
+  .clist span b{word-break:break-all}
+  .hours{margin-top:18px;font-size:13px}
+  .form{padding:22px 18px;border-radius:16px}
+  .form h3{text-align:center}
+  .form>p{text-align:center}
+  .send .btn{height:50px}
+
+  /* rodapé centralizado */
+  .foot{margin-top:64px;padding:44px 0 28px;text-align:center}
+  .foot-g{grid-template-columns:1fr 1fr;gap:30px 16px}
+  .foot-g>div:first-child,.foot-g>.fc{grid-column:1/-1}
+  .foot-logo{display:block;margin:0 auto}
+  .foot-logo img{width:170px;margin:0 auto}
+  .foot h4{margin-bottom:12px}
+  .foot ul{gap:10px}
+  .fc ul{display:inline-grid;text-align:left}
+  .foot .legal{flex-direction:column;align-items:center;text-align:center;gap:8px;margin-top:30px;font-size:12px}
+
+  /* área do cliente */
+  .lg-sec{padding:40px 0 10px}
+  .lg-intro{text-align:center}
+  .lg-intro .hx-eye{justify-content:center}
+  .lg-intro h1{font-size:30px}
+  .lg-intro>p{font-size:15.5px;margin:0 auto}
+  .lg-l{display:inline-grid;text-align:left;margin-top:22px}
+  .lg-card{padding:24px 20px;border-radius:18px}
+  .lg-card h2{text-align:center}
+
+  /* páginas de guia */
+  .t-hero{padding:40px 0 10px}
+  .t-hero h1{font-size:32px}
+  .wa{right:16px;bottom:16px;width:50px;height:50px}
+}
+@media (max-width:360px){
+  .brand-h img{height:34px}
+  .hx h1{font-size:31px}
+  .social{grid-template-columns:1fr}
+}
