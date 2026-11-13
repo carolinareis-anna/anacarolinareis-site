@@ -22,6 +22,31 @@
     });
   }
 
+
+  // v16 · barra de navegação no celular (substitui o botão flutuante)
+  (function () {
+    var wa = document.querySelector('a.wa');
+    if (!wa || document.querySelector('.mbar')) return;
+    var here = location.pathname.replace(/\/+$/, '').split('/').pop().replace('.html', '');
+    var home = here === '' || here === 'index';
+    var cli = here === 'area-do-cliente' || here === 'painel';
+    var ic = {
+      ini: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+      are: '<path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3.5 3.5 0 0 0 6 0zM19 7l-3 7a3.5 3.5 0 0 0 6 0z"/>',
+      cli: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>'
+    };
+    var svg = function (p) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>'; };
+    var bar = document.createElement('nav');
+    bar.className = 'mbar'; bar.setAttribute('aria-label', 'Atalhos');
+    bar.innerHTML =
+      '<a href="./#inicio"' + (home ? ' aria-current="page"' : '') + '>' + svg(ic.ini) + 'Início</a>' +
+      '<a href="./#areas">' + svg(ic.are) + 'Áreas</a>' +
+      '<a class="mbar-wa" href="' + wa.getAttribute('href') + '" target="_blank" rel="noopener">' + wa.querySelector('svg').outerHTML + 'WhatsApp</a>' +
+      '<a href="area-do-cliente"' + (cli ? ' aria-current="page"' : '') + '>' + svg(ic.cli) + 'Cliente</a>';
+    document.body.appendChild(bar);
+    document.body.classList.add('has-mbar');
+  })();
+
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
