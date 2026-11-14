@@ -1197,3 +1197,17 @@ html{scroll-padding-top:84px}
 @media (max-width:700px){
   .portrait.photo{aspect-ratio:4/5;max-width:300px}
 }
+
+
+/* ═══ v21 · publicações do Instagram ═══ */
+.ig{padding-top:72px}
+.ig .sec-h a{color:var(--accent);font-weight:600}
+.ig-row{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 18px;-webkit-overflow-scrolling:touch}
+.ig-row::before,.ig-row::after{content:"";margin:auto}
+.ig-it{flex:0 0 min(340px,86vw);scroll-snap-align:center}
+.ig-it .instagram-media{min-width:0!important;width:100%!important;margin:0!important;border-radius:16px!important}
+.ig-it blockquote.instagram-media{padding:24px;border:1px solid var(--line);background:var(--surface);text-align:center}
+@media (max-width:700px){
+  .home>#instagram{order:4}
+  .ig{padding-top:40px}
+}

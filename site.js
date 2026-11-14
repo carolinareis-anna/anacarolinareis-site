@@ -259,3 +259,35 @@
   var y = document.querySelector('[data-year]');
   if (y) y.textContent = new Date().getFullYear();
 })();
+
+// publicações do Instagram: lista em instagram.json, exibidas com a incorporação oficial
+(function () {
+  try {
+    var box = document.querySelector('[data-ig]');
+    if (!box || !window.fetch) return;
+    var sec = box.closest('section');
+    fetch('instagram.json?h=' + Math.floor(Date.now() / 36e5)).then(function (r) { return r.json(); }).then(function (d) {
+      var posts = (d && d.posts || []).slice(0, 8);
+      if (!posts.length) return;
+      posts.forEach(function (u) {
+        var it = document.createElement('div'); it.className = 'ig-it';
+        var q = document.createElement('blockquote');
+        q.className = 'instagram-media';
+        q.setAttribute('data-instgrm-permalink', u);
+        q.setAttribute('data-instgrm-version', '14');
+        var a = document.createElement('a'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Ver a publicação no Instagram';
+        q.appendChild(a); it.appendChild(q); box.appendChild(it);
+      });
+      sec.hidden = false;
+      var load = function () {
+        if (window.instgrm) { window.instgrm.Embeds.process(); return; }
+        var s = document.createElement('script'); s.async = true; s.src = 'https://www.instagram.com/embed.js';
+        document.body.appendChild(s);
+      };
+      if ('IntersectionObserver' in window) {
+        var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '700px' });
+        o.observe(sec);
+      } else load();
+    }).catch(function () {});
+  } catch (e) {}
+})();
