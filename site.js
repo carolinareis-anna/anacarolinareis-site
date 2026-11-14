@@ -197,6 +197,11 @@
     };
     setTimeout(tick, 2600);
   }
+  // com "reduzir movimento" ligado no aparelho, a frase troca inteira, sem digitação
+  if (tw && calm) {
+    var fr2 = tw.dataset.frases.split('|'), k2 = 0;
+    setInterval(function () { k2 = (k2 + 1) % fr2.length; tw.textContent = fr2[k2]; }, 3200);
+  }
 
   // item do menu da seção visível
   var links = [].slice.call(document.querySelectorAll('.nav a[href*="#"]'));

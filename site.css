@@ -1167,3 +1167,21 @@ html{scroll-padding-top:84px}
 @media (max-width:700px){
   .clist,.hours{display:none!important}
 }
+
+
+/* ═══ v19 · celular: seção inteira ao tocar nos atalhos, Sobre antes do FAQ, login direto ao formulário ═══ */
+@media (max-width:700px){
+  html{scroll-padding-top:64px}
+  section[id],[id].sec,.sec{scroll-margin-top:-30px}
+  #inicio{scroll-margin-top:0}
+  #contato{scroll-margin-top:14px}
+  .home{display:flex;flex-direction:column}
+  .home>#sobre{order:1}
+  .home>#faq{order:2;background:var(--surface);border-top:1px solid var(--line)}
+  .home>#contato{order:3}
+  .lg-l{display:none!important}
+  .car-dots{flex-wrap:wrap;justify-content:center}
+  .car-nav{flex-wrap:wrap}
+}
+
+.form h3{margin-bottom:14px}
