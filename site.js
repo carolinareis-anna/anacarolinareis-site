@@ -281,6 +281,7 @@
       sec.hidden = false;
       var load = function () {
         if (window.instgrm) { window.instgrm.Embeds.process(); return; }
+        if (document.querySelector('script[src*="instagram.com/embed.js"]')) return;
         var s = document.createElement('script'); s.async = true; s.src = 'https://www.instagram.com/embed.js';
         document.body.appendChild(s);
       };
@@ -288,6 +289,8 @@
         var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '700px' });
         o.observe(sec);
       } else load();
+      // reserva: se o navegador não avisar que a seção apareceu, carrega mesmo assim
+      setTimeout(function () { if (!window.instgrm) load(); [].forEach.call(sec.querySelectorAll('.rv'), function (el) { el.classList.add('in'); }); }, 4000);
     }).catch(function () {});
   } catch (e) {}
 })();
