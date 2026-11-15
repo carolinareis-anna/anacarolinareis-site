@@ -294,3 +294,45 @@
     }).catch(function () {});
   } catch (e) {}
 })();
+
+// artigos: lista em artigos.json (um artigo por post aprovado)
+(function () {
+  try {
+    var home = document.querySelector('[data-artigos]'), pg = document.querySelector('[data-artigos-page]');
+    if ((!home && !pg) || !window.fetch) return;
+    var el = function (t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x) e.textContent = x; return e; };
+    var card = function (a) {
+      var c = el('a', 'art-c'); c.href = 'artigos?a=' + encodeURIComponent(a.slug);
+      c.appendChild(el('small', '', a.area || 'Artigo')); c.appendChild(el('b', '', a.titulo)); c.appendChild(el('span', '', a.resumo || ''));
+      return c;
+    };
+    var dataBR = function (d) { var p = (d || '').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : ''; };
+    fetch('artigos.json?h=' + Math.floor(Date.now() / 36e5)).then(function (r) { return r.json(); }).then(function (list) {
+      list = (list || []).filter(function (a) { return a && a.slug && a.titulo; });
+      if (home) {
+        if (!list.length) return;
+        list.slice(0, 3).forEach(function (a) { home.appendChild(card(a)); });
+        var sec = home.closest('section'); sec.hidden = false;
+        [].forEach.call(sec.querySelectorAll('.rv'), function (e) { e.classList.add('in'); });
+        return;
+      }
+      var slug = (location.search.match(/[?&]a=([^&]+)/) || [])[1];
+      var a = slug && list.filter(function (x) { return x.slug === decodeURIComponent(slug); })[0];
+      if (a) {
+        document.title = a.titulo + ' | Ana Carolina Reis';
+        var md = document.querySelector('meta[name="description"]'); if (md && a.resumo) md.setAttribute('content', a.resumo);
+        var h1 = document.querySelector('[data-art-h1]'), ld = document.querySelector('[data-art-lead]');
+        if (h1) h1.textContent = a.titulo; if (ld) ld.textContent = a.resumo || '';
+        var b = el('article', 'art-body');
+        b.appendChild(el('p', 'art-meta', (a.area ? a.area + ' · ' : '') + dataBR(a.data)));
+        (a.corpo || []).forEach(function (p) { b.appendChild(el('p', '', p)); });
+        if (a.fonte) b.appendChild(el('p', 'art-meta', 'Fundamento: ' + a.fonte));
+        b.appendChild(el('p', 'art-meta', 'Conteúdo informativo, que não substitui a análise de cada caso.'));
+        if (a.post) { var l = el('a', 'btn btn-g btn-sm', 'Ver a publicação no Instagram'); l.href = a.post; l.target = '_blank'; l.rel = 'noopener'; b.appendChild(l); }
+        pg.appendChild(b);
+      } else if (list.length) {
+        var g = el('div', 'art-g'); list.forEach(function (x) { g.appendChild(card(x)); }); pg.appendChild(g);
+      } else pg.appendChild(el('p', '', 'Os primeiros artigos serão publicados em breve.'));
+    }).catch(function () {});
+  } catch (e) {}
+})();

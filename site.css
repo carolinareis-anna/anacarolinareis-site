@@ -1211,3 +1211,35 @@ html{scroll-padding-top:84px}
   .home>#instagram{order:4}
   .ig{padding-top:40px}
 }
+
+
+/* ═══ v22 · áreas mais compactas, bolinhas no celular, Instagram só com a imagem, artigos ═══ */
+@media (min-width:901px){
+  .cs{padding:28px 28px 24px}
+  .cs-tags{gap:7px}
+  .cs-tags a,.cs-tags span{padding:7px 11px;font-size:13px}
+}
+@media (max-width:700px){
+  .car-nav{order:0;margin:16px 0 0;gap:0}
+  .car-arr{display:none}
+  .car-dots{flex-wrap:nowrap;gap:7px;align-items:center}
+  .cs-dot{flex:0 0 auto;width:8px;height:8px;min-width:0;padding:0;border:0;background:var(--line-2);font-size:0;transition:width .25s,background .25s}
+  .cs-dot span{display:none}
+  .cs-dot i{opacity:0}
+  .cs-dot[aria-current=true]{width:24px;background:var(--brand)}
+  .cs-dot[aria-current=true] i{animation-duration:5s}
+}
+.ig{padding-bottom:36px}
+.ig-it{overflow:hidden;border-radius:16px;height:calc(54px + min(340px,86vw)*1.25);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.ig-it blockquote.instagram-media{height:100%}
+.art-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.art-c{display:flex;flex-direction:column;gap:10px;padding:26px 24px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);text-decoration:none;color:var(--ink)}
+.art-c small{font:600 11.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.art-c b{font:600 21px/1.25 var(--serif)}
+.art-c span{color:var(--muted);font-size:15px}
+.art-c:hover{border-color:var(--brand)}
+.art-all{text-align:center;margin-top:26px}
+.art-body{max-width:760px}
+.art-body p{color:var(--muted);font-size:16.5px;margin-bottom:14px}
+.art-body .art-meta{font-size:13px;letter-spacing:.04em}
+@media (max-width:900px){.art-g{grid-template-columns:1fr}}
